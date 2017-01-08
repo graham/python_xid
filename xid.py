@@ -2,13 +2,14 @@
 # almost a direct copy of https://github.com/rs/xid
 # Changes to make more pythonic as needed.
 
-import base64
 import hashlib
 import os
 import platform
 import time
 import datetime
 import threading
+
+import base32hex
 
 # MyPy imports
 from typing import List
@@ -83,6 +84,7 @@ def generate_new_xid():
     return id
 
 
+
 class Xid(object):
     def __init__(self, id=None):
         # type: (List[int]) -> None
@@ -117,7 +119,7 @@ class Xid(object):
     def string(self):
         # type: () -> str
         byte_value = self.bytes()
-        return base64.b32encode(byte_value).lower()[:trimLen]
+        return base32hex.b32encode(byte_value).lower()[:trimLen]
 
     def bytes(self):
         # type: () -> str
@@ -140,11 +142,11 @@ class Xid(object):
     @classmethod
     def from_string(cls, s):
         # type: (str) -> Xid
-        val = base64.b32decode(s.upper() + "====")
-        ordval = map(ord, val[:rawLen])
-        value_check = [0 < x < 255 for x in ordval]
+        val = base32hex.b32decode(s.upper())
+        value_check = [0 < x < 255 for x in val]
 
         if not all(value_check):
             raise InvalidXid(s)
         
-        return cls(ordval)
+        return cls(val)
+

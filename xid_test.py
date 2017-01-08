@@ -60,6 +60,16 @@ class TestXid(unittest.TestCase):
         for x in TestXids:
             self.assertEqual(x.get('xid').counter(), x.get('counter'))
 
+    def test_copy_array_from_golang(self):
+        x = Xid([0x4d, 0x88, 0xe1, 0x5b, 0x60, 0xf4,
+                 0x86, 0xe4, 0x28, 0x41, 0x2d, 0xc9])
+        self.assertEqual('9m4e2mr0ui3e8a215n4g', x.string())
+
+    def test_copy_string_from_golang(self):
+        x = Xid.from_string('9m4e2mr0ui3e8a215n4g')
+        self.assertEqual(x.value, [0x4d, 0x88, 0xe1, 0x5b, 0x60, 0xf4,
+                                   0x86, 0xe4, 0x28, 0x41, 0x2d, 0xc9])
+
 if __name__ == '__main__':
     unittest.main()
 
