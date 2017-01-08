@@ -2,7 +2,7 @@
 
 > This project is a python implementation of the Go Lang library found here: [https://github.com/rs/xid](https://github.com/rs/xid)
 
-I've included the ReadMe from that project here (with some modifications for python).
+__I've included the ReadMe from that project here (with some modifications for python).__
 
 Package xid is a globally unique id generator library, ready to be used safely directly in your server code.
 
