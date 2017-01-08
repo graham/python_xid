@@ -10,6 +10,9 @@ import time
 import datetime
 import threading
 
+# MyPy imports
+from typing import List
+
 # Some Constants
 trimLen = 20
 encodedLen = 24
@@ -20,11 +23,13 @@ class InvalidXid(Exception):
     pass
 
 def randInt():
+    # type: () -> int
     buf = os.urandom(3)
-    buf = map(ord, buf)
-    return buf[0] << 16 | buf[1] << 8 | buf[2]
+    buford = map(ord, buf)
+    return buford[0] << 16 | buford[1] << 8 | buford[2]
 
 def realMachineID():
+    # type: () -> List[int]
     try:
         hostname = platform.node()
         hw = hashlib.md5()
@@ -32,8 +37,8 @@ def realMachineID():
         val = hw.digest()[:3]
         return map(ord, val)
     except:
-        return randInt()
-    
+        buf = os.urandom(3)
+        return map(ord, buf)
 
 ## Module level items
 pid = os.getpid()
@@ -53,6 +58,7 @@ def generateNextId():
 objectIDGenerator = generateNextId()
 
 def generate_new_xid():
+    # type: () -> List[int]
     now = int(time.time())
     id = [0] * rawLen
 
@@ -79,35 +85,42 @@ def generate_new_xid():
 
 class Xid(object):
     def __init__(self, id=None):
+        # type: (List[int]) -> None
         if id is None:
             id = generate_new_xid()
         self.value = id
 
     def pid(self):
+        # type: () -> int
         return (self.value[7] << 8 | self.value[8])
 
     def counter(self):
+        # type: () -> int
         return (self.value[9] << 16 |
                 self.value[10] << 8 |
                 self.value[11])
 
     def machine(self):
+        # type: () -> str
         return ''.join(map(chr, self.value[4:7]))
 
     def datetime(self):
         return datetime.datetime.fromtimestamp(self.time())
 
     def time(self):
+        # type: () -> int
         return (self.value[0] << 24 |
                 self.value[1] << 16 |
                 self.value[2] << 8 |
                 self.value[3])
 
     def string(self):
+        # type: () -> str
         byte_value = self.bytes()
         return base64.b32encode(byte_value).lower()[:trimLen]
 
     def bytes(self):
+        # type: () -> str
         return ''.join(map(chr, self.value))        
 
     def __repr__(self):
@@ -116,20 +129,17 @@ class Xid(object):
     def __str__(self):
         return self.string()
 
-    def __eq__(self, arg):
-        if isinstance(other, self.__class__):
-            return self.value == arg.value
-        else:
-            return False
-
     def __lt__(self, arg):
+        # type: (Xid) -> bool        
         return self.string() < arg.string()
 
     def __gt__(self, arg):
+        # type: (Xid) -> bool        
         return self.string() > arg.string()
 
     @classmethod
     def from_string(cls, s):
+        # type: (str) -> Xid
         val = base64.b32decode(s.upper() + "====")
         ordval = map(ord, val[:rawLen])
         value_check = [0 < x < 255 for x in ordval]
