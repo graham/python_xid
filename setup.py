@@ -12,7 +12,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='python_xid',
+    name='xid',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
@@ -32,5 +32,10 @@ setup(
     # Choose your license
     license='MIT',
 
-    py_modules=['xid']
+    py_modules=['xid'],
+    download_url="https://github.com/graham/python_xid/tarball/0.1",
+
+    package_data={
+        'readme': ['README.md']
+    },
 )
