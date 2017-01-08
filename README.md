@@ -70,6 +70,7 @@ easy_install python_xid
 ## Usage
 
 ```python
+from xid import Xid
 guid = Xid()
 
 print guid.string()
