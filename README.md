@@ -64,14 +64,15 @@ References:
 
 ## Install
 
-   easy_install python_xid
-
+```bash
+easy_install python_xid
+```
 ## Usage
 
 ```python
 guid = Xid()
 
-println(guid.string())
+print guid.string()
 // Output: 9m4e2mr0ui3e8a215n4g
 ```
 
