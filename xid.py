@@ -104,8 +104,11 @@ class Xid(object):
                 self.value[3])
 
     def string(self):
-        byte_value = ''.join(map(chr, self.value))
+        byte_value = self.bytes()
         return base64.b32encode(byte_value).lower()[:trimLen]
+
+    def bytes(self):
+        return ''.join(map(chr, self.value))        
 
     def __repr__(self):
         return "<Xid '%s'>" % self.__str__()
