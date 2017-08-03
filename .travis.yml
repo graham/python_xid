@@ -1,0 +1,13 @@
+language: python
+python:
+  - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "nightly"
+sudo: false
+install:
+  - which pip3 && pip3 install --upgrade coverage || pip install --upgrade coverage
+script:
+  - coverage run --branch --omit *_test.py xid_test.py --verbose && coverage report -m --fail-under=90 

@@ -101,7 +101,7 @@ def decode(src, str_map):
         if src_len >= 2:
             dst[0] = (dbuf[0] << 3) | (dbuf[1] >> 2)
 
-        dst = map(lambda x: x & 0xff, dst)
+        dst = list(map(lambda x: x & 0xff, dst))
 
         if src_len == 2:
             dst = dst[:1]
@@ -121,7 +121,7 @@ def decode(src, str_map):
 
 
 def b32encode(src):
-    return encode(map(ord, src), encodeHex)
+    return encode(list(map(ord, src)), encodeHex)
 
 
 def b32decode(src):
