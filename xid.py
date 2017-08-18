@@ -12,7 +12,10 @@ import threading
 import base32hex
 
 # MyPy imports
-from typing import List
+try:
+  from typing import List
+except:
+  pass # ignore, we do not need the typing module
 
 # Some Constants
 trimLen = 20
@@ -25,8 +28,8 @@ class InvalidXid(Exception):
 
 def randInt():
     # type: () -> int
-    buf = os.urandom(3)
-    buford = map(ord, buf)
+    buf = str(os.urandom(3))
+    buford = list(map(ord, buf))
     return buford[0] << 16 | buford[1] << 8 | buford[2]
 
 def realMachineID():
@@ -34,12 +37,12 @@ def realMachineID():
     try:
         hostname = platform.node()
         hw = hashlib.md5()
-        hw.update(hostname)
-        val = hw.digest()[:3]
-        return map(ord, val)
+        hw.update(hostname.encode('utf-8'))
+        val = str(hw.digest()[:3])
+        return list(map(ord, val))
     except:
         buf = os.urandom(3)
-        return map(ord, buf)
+        return list(map(ord, buf))
 
 ## Module level items
 pid = os.getpid()
@@ -75,7 +78,7 @@ def generate_new_xid():
     id[7] = (pid >> 8) & 0xff
     id[8] = (pid) & 0xff
 
-    i = objectIDGenerator.next()
+    i = next(objectIDGenerator)
 
     id[9] = (i >> 16) & 0xff
     id[10] = (i >> 8) & 0xff

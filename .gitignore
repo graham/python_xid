@@ -1,0 +1,5 @@
+*pycache*
+*.pyc
+.*.swp
+*.egg-info
+.coverage
