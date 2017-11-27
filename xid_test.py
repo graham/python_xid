@@ -70,6 +70,22 @@ class TestXid(unittest.TestCase):
         self.assertEqual(x.value, [0x4d, 0x88, 0xe1, 0x5b, 0x60, 0xf4,
                                    0x86, 0xe4, 0x28, 0x41, 0x2d, 0xc9])
 
+    def test_thread_safety(self):
+        import threading
+        threads = []
+
+        def worker():
+            for i in range(10):
+                threading.current_thread().ident, Xid().string()
+
+        for i in range(10):
+            t = threading.Thread(target=worker)
+            threads.append(t)
+            t.start()
+
+        for t in threads:
+            t.join()
+
+
 if __name__ == '__main__':
     unittest.main()
-
