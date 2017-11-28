@@ -44,6 +44,12 @@ class TestXid(unittest.TestCase):
         self.assertEqual(x.bytes(), y.bytes())
         self.assertEqual(x.string(), y.string())
 
+    def test_xid_always_reversible(self):
+        for i in range(1000):
+            s = Xid().string()
+            self.assertEqual(Xid.from_string(s).string(), s)
+
+
     def test_timestamp(self):
         for x in TestXids:
             self.assertEqual(x.get('xid').time(), x.get('ts'))
