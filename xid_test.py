@@ -44,6 +44,12 @@ class TestXid(unittest.TestCase):
         self.assertEqual(x.bytes(), y.bytes())
         self.assertEqual(x.string(), y.string())
 
+    def test_xid_always_reversible(self):
+        for i in range(1000):
+            s = Xid().string()
+            self.assertEqual(Xid.from_string(s).string(), s)
+
+
     def test_timestamp(self):
         for x in TestXids:
             self.assertEqual(x.get('xid').time(), x.get('ts'))
@@ -70,6 +76,22 @@ class TestXid(unittest.TestCase):
         self.assertEqual(x.value, [0x4d, 0x88, 0xe1, 0x5b, 0x60, 0xf4,
                                    0x86, 0xe4, 0x28, 0x41, 0x2d, 0xc9])
 
+    def test_thread_safety(self):
+        import threading
+        threads = []
+
+        def worker():
+            for i in range(10):
+                threading.current_thread().ident, Xid().string()
+
+        for i in range(10):
+            t = threading.Thread(target=worker)
+            threads.append(t)
+            t.start()
+
+        for t in threads:
+            t.join()
+
+
 if __name__ == '__main__':
     unittest.main()
-
